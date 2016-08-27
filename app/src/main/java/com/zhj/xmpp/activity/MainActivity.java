@@ -7,6 +7,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhj.xmpp.R;
+import com.zhj.xmpp.utils.ToolBarUtils;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -43,6 +44,10 @@ public class MainActivity extends Activity {
     }
 
     private void initView() {
+
+        //初始化view,初始化toolbar
+        ToolBarUtils toolBarUtils = new ToolBarUtils();
+        toolBarUtils.createToolBar(mMainLlBottom);
 
     }
 
