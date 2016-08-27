@@ -3,7 +3,6 @@ package com.zhj.xmpp.activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,14 +23,14 @@ public class LoginActivity extends Activity {
     private EditText mEtUserName;
     private EditText mEtPassword;
     private Button mBtnLogin;
-    public static  final String HOST ="127.0.0.1"; //服务器ip地址
+    public static  final String HOST ="192.168.56.1"; //服务器ip地址
     public static final int PORT = 5222; //xmpp默认的通信端口号
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Log.d("LoginActivity", "login");
+//        Log.d("LoginActivity", "login");
 
         initView();
         initData();
@@ -40,14 +39,15 @@ public class LoginActivity extends Activity {
 
 
 
-    private void initData() {
 
-    }
 
     private void initView() {
         mEtUserName = (EditText) findViewById(R.id.et_username);
         mEtPassword = (EditText) findViewById(R.id.et_password);
         mBtnLogin = (Button) findViewById(R.id.btn);
+    }
+    private void initData() {
+
     }
 
     private void initEvent() {
@@ -92,6 +92,12 @@ public class LoginActivity extends Activity {
                                 }
                             });
                         } catch (XMPPException e) {
+                            ThreadUtils.runInUIThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             e.printStackTrace();
                         }
                     }
