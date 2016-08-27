@@ -6,3 +6,7 @@
 .DS_Store
 /build
 /captures
+/build/
+/.idea/
+/app/build/
+app/src/main/res/drawable/
