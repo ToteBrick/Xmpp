@@ -1,14 +1,14 @@
-package com.zhj.xmpp;
+package com.zhj.xmpp.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.v7.app.AppCompatActivity;
 
-import com.zhj.xmpp.activity.LoginActivity;
+import com.zhj.xmpp.R;
 import com.zhj.xmpp.utils.ThreadUtils;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
