@@ -1,6 +1,7 @@
 package com.zhj.xmpp.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -89,6 +90,9 @@ public class LoginActivity extends Activity {
                                 @Override
                                 public void run() {
                                     Toast.makeText(LoginActivity.this, "登陆成功", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             });
                         } catch (XMPPException e) {
