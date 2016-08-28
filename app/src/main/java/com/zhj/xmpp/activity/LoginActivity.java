@@ -27,6 +27,7 @@ public class LoginActivity extends Activity {
     private Button mBtnLogin;
     public static  final String HOST ="192.168.56.1"; //服务器ip地址
     public static final int PORT = 5222; //xmpp默认的通信端口号
+    public static final String SERVER_NAME = "zhj"; //服务器名称
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

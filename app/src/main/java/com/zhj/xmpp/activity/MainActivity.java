@@ -10,8 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhj.xmpp.R;
-import com.zhj.xmpp.fragment.ContactFragment;
 import com.zhj.xmpp.fragment.SessionFragment;
+import com.zhj.xmpp.fragment.ContactFragment;
 import com.zhj.xmpp.utils.ToolBarUtils;
 
 import java.util.ArrayList;
@@ -75,8 +75,8 @@ public class MainActivity extends Activity {
 //        mMainViewpager-->view-->FragmentPagerAdapter ->会缓存fragment,适合fragment比较少的情况
 //        mMainViewpager-->view--> FragmentStatePagerAdapter->只会缓存fragment的state
         mFragments = new ArrayList<Fragment>();
-        mFragments.add(new SessionFragment());
         mFragments.add(new ContactFragment());
+        mFragments.add(new SessionFragment());
         mMainViewpager.setAdapter(new MainPagerAdapter(fm));
     }
 
