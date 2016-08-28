@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.zhj.xmpp.R;
+import com.zhj.xmpp.service.IService;
 import com.zhj.xmpp.utils.ThreadUtils;
 
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -86,6 +87,8 @@ public class LoginActivity extends Activity {
                             //开始登录
                             conn.login(userName,password);
                             //登录成功
+                            //保存相关变量
+                            IService.conn = conn;
                             ThreadUtils.runInUIThread(new Runnable() {
                                 @Override
                                 public void run() {
