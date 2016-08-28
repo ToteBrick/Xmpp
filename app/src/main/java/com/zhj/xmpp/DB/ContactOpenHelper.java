@@ -35,10 +35,10 @@ public class ContactOpenHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        String sql = "create table" +
+        String sql = "create table " +
                 T_CONTACT +
                 "(" +
-                CONTACTTABLE._ID + "integer primary key autoincrement , " +
+                CONTACTTABLE._ID + " integer primary key autoincrement , " +
                 CONTACTTABLE.ACOUNT + " text ," +
                 CONTACTTABLE.NICKNAME + " text," +
                 CONTACTTABLE.AVATOR + " text," +

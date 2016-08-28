@@ -30,7 +30,7 @@ import java.util.Collection;
 /**
  * Created by hasee on 2016/8/28.
  */
-public class ContactFragment extends Fragment {
+public class ContactsFragment extends Fragment {
 
     private ListView mListView;
 
@@ -41,12 +41,12 @@ public class ContactFragment extends Fragment {
     }
 
 
-    public ContactFragment() {
+    public ContactsFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_session, container,
+        View rootView = inflater.inflate(R.layout.fragment_contact, container,
                 false);
         initView(rootView);
         return rootView;
@@ -145,7 +145,7 @@ public class ContactFragment extends Fragment {
                                 textView.setText(account);
 
                             }
-                        }; 
+                        };
 
                         //listview 涉足adapter
                         mListView.setAdapter(adapter);

@@ -16,6 +16,7 @@
         android:textColor="#ffffff" />
 
     <android.support.v4.view.ViewPager
+        android:layout_weight="1"
         android:id="@+id/main_viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -23,6 +24,7 @@
     </android.support.v4.view.ViewPager>
 
     <LinearLayout
+        android:layout_weight="0"
         android:id="@+id/main_ll_bottom"
         android:orientation="horizontal"
         android:layout_width="match_parent"
