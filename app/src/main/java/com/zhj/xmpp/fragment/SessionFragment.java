@@ -19,23 +19,22 @@ import java.util.Collection;
 /**
  * Created by hasee on 2016/8/28.
  */
-public class SessionFragment  extends Fragment {
+public class SessionFragment extends Fragment {
 
     private ListView mListView;
 
     @Override
-    public void onCreate( Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         init();
         super.onCreate(savedInstanceState);
     }
-
 
 
     public SessionFragment() {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_session, container,
                 false);
         initView(rootView);
@@ -60,17 +59,31 @@ public class SessionFragment  extends Fragment {
     }
 
     private void initData() {
-//        mListView.setAdapter(new SessionAdapter());
+
         Roster roster = IService.conn.getRoster();//得到花名册，就是所有联系人。
         Collection<RosterEntry> entries = roster.getEntries();//得到对应联系人实体集合
 
-        for (RosterEntry entry:
-             entries) {
-            System.out.println(entry.toString());
+        for (RosterEntry entry :
+                entries) {
+
+            /**
+             * JID = [NODE"@"]domain["/"resource]
+             * eg:user@user.com/res
+             * domain:服务器域名
+             * node:用户名
+             */
+//            System.out.print(entry.toString() + " ");
+            System.out.print(entry.getName() + " ");//nickname别名
+            System.out.print(entry.getUser() + " ");//jid->用户唯一标识
+//            System.out.print(entry.getGroups() + " ");
+//            System.out.print(entry.getType() + " ");
+            System.out.println("------------------");
         }
+        //        mListView.setAdapter(new SessionAdapter());
     }
 
     private void initListner() {
 
     }
+
 }
