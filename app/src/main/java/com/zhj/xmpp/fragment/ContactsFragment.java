@@ -24,6 +24,8 @@ import com.zhj.xmpp.utils.ThreadUtils;
 
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.packet.Presence;
 
 import java.util.Collection;
 
@@ -33,6 +35,7 @@ import java.util.Collection;
 public class ContactsFragment extends Fragment {
 
     private ListView mListView;
+    private Roster roster;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,8 @@ public class ContactsFragment extends Fragment {
     }
 
     private void init() {
-        Roster roster = IService.conn.getRoster();//得到花名册，就是所有联系人。
+        //得到花名册，就是所有联系人。
+        roster = IService.conn.getRoster();
         Collection<RosterEntry> entries = roster.getEntries();//得到对应联系人实体集合
 
         for (RosterEntry entry :
@@ -147,14 +151,52 @@ public class ContactsFragment extends Fragment {
                             }
                         };
 
-                        //listview 涉足adapter
+                        //listview 设置adapter
                         mListView.setAdapter(adapter);
                     }
                 });
 
+                //设置roster监听器。监听花名册的改变
+                roster.addRosterListener(mMyRosterListner);
             }
+
+
         });
 
+    }
+    //定义监听器，监听roster改变
+    MyRosterListner mMyRosterListner = new MyRosterListner();
+    class MyRosterListner implements RosterListener{
+
+        @Override
+        public void entriesAdded(Collection<String> addresses) {//添加联系人
+            System.out.println("---------entriesAdded--------------");
+            printAddress(addresses);
+        }
+
+        @Override
+        public void entriesUpdated(Collection<String> addresses) {//联系人更新
+            System.out.println("---------entriesUpdated--------------");
+            printAddress(addresses);
+        }
+
+        @Override
+        public void entriesDeleted(Collection<String> addresses) {//联系人删除
+            System.out.println("---------entriesDeleted--------------");
+            printAddress(addresses);
+        }
+
+        @Override
+        public void presenceChanged(Presence presence) {//状态改变
+
+        }
+    }
+
+    private void printAddress(Collection<String> addresses) {
+        for (String info :
+                addresses) {
+            System.out.println(info);
+        }
     }
 
     private void initListner() {

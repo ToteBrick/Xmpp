@@ -24,39 +24,42 @@ public class TestContactProvider extends AndroidTestCase {
          public static final String PINYIN = "pinyin";
          */
         ContentValues values = new ContentValues();
-        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT,"吴碧丽@zhj");
-        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME,"老吴@zhj");
-        values.put(ContactOpenHelper.CONTACTTABLE.AVATOR,0);
-        values.put(ContactOpenHelper.CONTACTTABLE.PINYIN,"laowu");
+        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj");
+        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "老伍@zhj");
+        values.put(ContactOpenHelper.CONTACTTABLE.AVATOR, 0);
+        values.put(ContactOpenHelper.CONTACTTABLE.PINYIN, "laowu");
         Uri insert = getContext().getContentResolver().insert(ContactProvider.CONTACT_URI, values);
     }
 
     public void testDelete() {
         getContext().getContentResolver().delete(ContactProvider.CONTACT_URI,
-                ContactOpenHelper.CONTACTTABLE.ACOUNT+"=?",new String[]{"吴碧丽@zhj"}) ;
+                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{"吴碧丽@zhj"});
     }
 
     public void testUpdate() {
         ContentValues values = new ContentValues();
-        getContext().getContentResolver().update(ContactProvider.CONTACT_URI,values,
-                ContactOpenHelper.CONTACTTABLE.ACOUNT+"=?",new String[]{"吴碧丽@zhj"}) ;
-        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT,"吴碧丽@zhj");
-        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME,"我是阿碧@zhj");
+        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj");
+        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "我是老伍@zhj");
+        // content://android.content.ContentProvider/contact
+        getContext().getContentResolver().update(ContactProvider.CONTACT_URI, values,
+                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{"伍碧林@zhj"});
     }
 
     public void testQuery() {
         Cursor cursor = getContext().getContentResolver().query(ContactProvider.CONTACT_URI, null, null, null, null);
         int columnCount = cursor.getColumnCount(); //列的总数
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             for (int i = 0; i < columnCount; i++) {
-                System.out.print(cursor.getString(i) +" ");
+                System.out.print(cursor.getString(i) + " ");
             }
-                System.out.println("");
+            System.out.println("");
         }
     }
-    public void testPinyin(){
+
+    public void testPinyin() {
         PinyinHelper helper = new PinyinHelper();
         String str = helper.convertToPinyinString("吴立滔滔", "", PinyinFormat.WITHOUT_TONE);
-        Log.d("TestContactProvider", "str :"+str);
+        Log.d("TestContactProvider", "str :" + str);
+        System.out.print(str);
     }
 }
