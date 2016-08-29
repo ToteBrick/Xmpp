@@ -14,7 +14,7 @@ import com.zhj.xmpp.DB.ContactOpenHelper;
 /*
  * @创建者     Administrator
 <<<<<<< Updated upstream
- * @创建时间   2015/8/31 15:39
+ * @创建时间
 =======
  * @创建时间
 >>>>>>> Stashed changes

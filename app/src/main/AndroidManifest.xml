@@ -28,7 +28,7 @@
 
         <provider
             android:name="com.zhj.xmpp.provider.ContactsProvider"
-            android:authorities="com.zhj.xmpp.provider.ContactProvider"></provider>
+            android:authorities="com.zhj.xmpp.provider.ContactsProvider"></provider>
     </application>
 
 </manifest>
