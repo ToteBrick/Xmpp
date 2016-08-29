@@ -16,11 +16,12 @@ import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.zhj.xmpp.DB.ContactOpenHelper;
 import com.zhj.xmpp.R;
 import com.zhj.xmpp.activity.ChatActivity;
 import com.zhj.xmpp.provider.ContactsProvider;
 import com.zhj.xmpp.utils.ThreadUtils;
+
+import org.jivesoftware.smack.Roster;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,6 +29,7 @@ import com.zhj.xmpp.utils.ThreadUtils;
 public class ContactsFragment extends Fragment {
 
 	private ListView		mListView;
+	private Roster			mRoster;
 	private CursorAdapter	mAdapter;
 
 	@Override
@@ -68,8 +70,8 @@ public class ContactsFragment extends Fragment {
 				// 游标移动到点击条目对应行
 				cursor.moveToPosition(position);
 				// 取值
-				String account = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACCOUNT));
-				String nickname = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
+				String account = cursor.getString(1);
+				String nickname = cursor.getString(2);
 
 				intent.putExtra(ChatActivity.CLICKACCOUNT, account);
 				intent.putExtra(ChatActivity.CLICKNICKNAME, nickname);
@@ -122,9 +124,9 @@ public class ContactsFragment extends Fragment {
 							public void bindView(View rootView, Context context, Cursor cursor) {
 								// 得到数据
 								String account =
-										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACCOUNT));
+										cursor.getString(1);
 								String nickName =
-										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
+										cursor.getString(2);
 								// 展示数据
 								TextView tvNickName = (TextView) rootView.findViewById(R.id.nickname);
 								TextView tvAccount = (TextView) rootView.findViewById(R.id.account);
