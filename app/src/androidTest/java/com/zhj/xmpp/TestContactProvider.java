@@ -24,10 +24,10 @@ public class TestContactProvider extends AndroidTestCase {
          public static final String PINYIN = "pinyin";
          */
         ContentValues values = new ContentValues();
-        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj.com");
-        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "老伍@zhj.com");
+        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "user1@zhj.com");
+        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "user1");
         values.put(ContactOpenHelper.CONTACTTABLE.AVATOR, 0);
-        values.put(ContactOpenHelper.CONTACTTABLE.PINYIN, "laowu");
+        values.put(ContactOpenHelper.CONTACTTABLE.PINYIN, "user1");
         Uri insert = getContext().getContentResolver().insert(ContactProvider.CONTACT_URI, values);
     }
 

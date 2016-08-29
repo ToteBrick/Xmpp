@@ -22,15 +22,12 @@ import com.zhj.xmpp.activity.ChatActivity;
 import com.zhj.xmpp.provider.ContactProvider;
 import com.zhj.xmpp.utils.ThreadUtils;
 
-import org.jivesoftware.smack.Roster;
-
 /**
  * A simple {@link Fragment} subclass.
  */
 public class ContactsFragment extends Fragment {
 
 	private ListView		mListView;
-	private Roster			mRoster;
 	private CursorAdapter	mAdapter;
 
 	@Override
@@ -102,7 +99,7 @@ public class ContactsFragment extends Fragment {
 			@Override
 			public void run() {
 				// 在子线程中查询对应的cursor数据
-				final Cursor c =
+				final Cursor cursor =
 						getActivity().getContentResolver().query(ContactProvider.CONTACT_URI, null, null, null, null);
 
 				// 在主线程中创建cursorAdapter,然后设置adapter
@@ -111,7 +108,7 @@ public class ContactsFragment extends Fragment {
 					public void run() {
 						// CursorAdapter 创建不能在子线程
 						// getview-->newView()-->bindView()
-						mAdapter = new CursorAdapter(getActivity(), c) {
+						mAdapter = new CursorAdapter(getActivity(), cursor) {
 							// convertView == null会调用该方法,决定根视图
 							@Override
 							public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -125,9 +122,9 @@ public class ContactsFragment extends Fragment {
 							public void bindView(View rootView, Context context, Cursor cursor) {
 								// 得到数据
 								String account =
-										cursor.getString(c.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
+										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
 								String nickName =
-										cursor.getString(c.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
+										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
 								// 展示数据
 								TextView tvNickName = (TextView) rootView.findViewById(R.id.nickname);
 								TextView tvAccount = (TextView) rootView.findViewById(R.id.account);
