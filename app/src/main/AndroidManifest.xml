@@ -29,6 +29,8 @@
         <provider
             android:name="com.zhj.xmpp.provider.ContactsProvider"
             android:authorities="com.zhj.xmpp.provider.ContactsProvider"></provider>
+
+        <service android:name=".service.IMService"></service>
     </application>
 
 </manifest>

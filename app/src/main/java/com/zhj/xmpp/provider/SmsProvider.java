@@ -13,7 +13,7 @@ import com.zhj.xmpp.DB.SmsOpenHelper;
 
 /*
  * @创建者     Administrator
- * @创建时间   2015/9/1 10:43
+ * @修改时间   2016/8/29
  * @描述	      聊天记录的provider
  *
  * @更新者     $Author$
