@@ -70,8 +70,8 @@ public class ContactsFragment extends Fragment {
 				// 游标移动到点击条目对应行
 				cursor.moveToPosition(position);
 				// 取值
-				String account = cursor.getString(1);
-				String nickname = cursor.getString(2);
+				String account = cursor.getString(1); //
+				String nickname = cursor.getString(2); //别名
 
 				intent.putExtra(ChatActivity.CLICKACCOUNT, account);
 				intent.putExtra(ChatActivity.CLICKNICKNAME, nickname);

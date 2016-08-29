@@ -28,8 +28,8 @@ public class TestContactsProvider extends AndroidTestCase {
 		 public static final String AVATAR = "avatar";
 		 public static final String PINYIN = "pinyin";
 		 */
-		values.put(ContactOpenHelper.CONTACTTABLE.ACCOUNT, "伍碧林@itheima.com");
-		values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "老五@itheima.com");
+		values.put(ContactOpenHelper.CONTACTTABLE.ACCOUNT, "伍碧林@zhj.com");
+		values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "老伍@zhj.com");
 		values.put(ContactOpenHelper.CONTACTTABLE.AVATOR, "0");
 		values.put(ContactOpenHelper.CONTACTTABLE.PINYIN, "wubilin");
 		// content://android.content.ContentProvider/contact
@@ -38,16 +38,17 @@ public class TestContactsProvider extends AndroidTestCase {
 
 	public void testDelete() {
 		getContext().getContentResolver().delete(ContactsProvider.CONTACT_URI,
-				ContactOpenHelper.CONTACTTABLE.ACCOUNT + "=?", new String[] { "伍碧林@itheima.com" });
+				ContactOpenHelper.CONTACTTABLE.ACCOUNT + "=?", new String[] { "伍碧林@zhj.com" });
 	}
 
 	public void testUpdate() {
 		ContentValues values = new ContentValues();
-		values.put(ContactOpenHelper.CONTACTTABLE.ACCOUNT, "伍碧林@itheima.com");
-		values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "我是老伍@itheima.com");
+		values.put(ContactOpenHelper.CONTACTTABLE.ACCOUNT, "伍碧林@zhj.com");
+		values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "我是老伍@zhj.com");
 		// content://android.content.ContentProvider/contact
 		getContext().getContentResolver().update(ContactsProvider.CONTACT_URI, values,
-				ContactOpenHelper.CONTACTTABLE.ACCOUNT + "=?", new String[] { "伍碧林@itheima.com" });
+				ContactOpenHelper.CONTACTTABLE.ACCOUNT + "=?", new String[] { "伍碧林@zhj.com" });
+
 	}
 
 	public void testQuery() {
@@ -74,7 +75,7 @@ public class TestContactsProvider extends AndroidTestCase {
 
 	public void testPinyin() {
 		PinyinHelper helper = new PinyinHelper();
-		String str = helper.convertToPinyinString("黑马程序员", "", PinyinFormat.WITHOUT_TONE);
+		String str = helper.convertToPinyinString("吴立滔滔", "", PinyinFormat.WITHOUT_TONE);
 		System.out.println(str);
 	}
 }
