@@ -24,8 +24,8 @@ public class TestContactProvider extends AndroidTestCase {
          public static final String PINYIN = "pinyin";
          */
         ContentValues values = new ContentValues();
-        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj");
-        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "老伍@zhj");
+        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj.com");
+        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "老伍@zhj.com");
         values.put(ContactOpenHelper.CONTACTTABLE.AVATOR, 0);
         values.put(ContactOpenHelper.CONTACTTABLE.PINYIN, "laowu");
         Uri insert = getContext().getContentResolver().insert(ContactProvider.CONTACT_URI, values);
@@ -33,16 +33,16 @@ public class TestContactProvider extends AndroidTestCase {
 
     public void testDelete() {
         getContext().getContentResolver().delete(ContactProvider.CONTACT_URI,
-                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{"吴碧丽@zhj"});
+                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{"吴碧丽@zhj.com"});
     }
 
     public void testUpdate() {
         ContentValues values = new ContentValues();
-        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj");
-        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "我是老伍@zhj");
+        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, "伍碧林@zhj.com");
+        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, "我是老伍@zhj.com");
         // content://android.content.ContentProvider/contact
         getContext().getContentResolver().update(ContactProvider.CONTACT_URI, values,
-                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{"伍碧林@zhj"});
+                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{"伍碧林@zhj.com"});
     }
 
     public void testQuery() {

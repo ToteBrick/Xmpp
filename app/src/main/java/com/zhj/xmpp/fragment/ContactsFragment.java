@@ -1,206 +1,194 @@
 package com.zhj.xmpp.fragment;
 
-import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zhj.xmpp.DB.ContactOpenHelper;
 import com.zhj.xmpp.R;
-import com.zhj.xmpp.activity.LoginActivity;
+import com.zhj.xmpp.activity.ChatActivity;
 import com.zhj.xmpp.provider.ContactProvider;
-import com.zhj.xmpp.service.IService;
-import com.zhj.xmpp.utils.PinyinUtils;
 import com.zhj.xmpp.utils.ThreadUtils;
 
 import org.jivesoftware.smack.Roster;
-import org.jivesoftware.smack.RosterEntry;
-import org.jivesoftware.smack.RosterListener;
-import org.jivesoftware.smack.packet.Presence;
-
-import java.util.Collection;
 
 /**
- * Created by hasee on 2016/8/28.
+ * A simple {@link Fragment} subclass.
  */
 public class ContactsFragment extends Fragment {
 
-    private ListView mListView;
-    private Roster roster;
+	private ListView		mListView;
+	private Roster			mRoster;
+	private CursorAdapter	mAdapter;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        init();
-        super.onCreate(savedInstanceState);
-    }
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		init();
+		super.onCreate(savedInstanceState);
+	}
 
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		View rootView = inflater.inflate(R.layout.fragment_contact, container, false);
+		initView(rootView);
+		return rootView;
+	}
 
-    public ContactsFragment() {
-    }
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		initData();
+		initListener();
+		super.onActivityCreated(savedInstanceState);
+	}
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_contact, container,
-                false);
-        initView(rootView);
-        return rootView;
-    }
+	private void init() {
+		registerContentObserver();
+	}
 
+	private void initView(View rootView) {
+		mListView = (ListView) rootView.findViewById(R.id.session_listview);
+	}
 
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        initData();
-        initListner();
-        super.onActivityCreated(savedInstanceState);
-    }
+	private void initListener() {
+		mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(getActivity(), ChatActivity.class);
+				// 得到对应的游标
+				Cursor cursor = mAdapter.getCursor();
+				// 游标移动到点击条目对应行
+				cursor.moveToPosition(position);
+				// 取值
+				String account = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
+				String nickname = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
 
-    private void init() {
-        //得到花名册，就是所有联系人。
-        roster = IService.conn.getRoster();
-        Collection<RosterEntry> entries = roster.getEntries();//得到对应联系人实体集合
+				intent.putExtra(ChatActivity.CLICKACCOUNT, account);
+				intent.putExtra(ChatActivity.CLICKNICKNAME, nickname);
+				startActivity(intent);
+			}
+		});
+	}
 
-        for (RosterEntry entry :
-                entries) {
+	private void initData() {
+		setAdapterOrNotify();
+		// BaseAdapter
+		// mListView.setAdapter(new SessionAdapter());
+	}
 
-            /**
-             * JID = [NODE"@"]domain["/"resource]
-             * eg:user@user.com/res
-             * domain:服务器域名
-             * node:用户名
-             */
-            updateOrInsertEntry(entry);
-//            System.out.print(entry.toString() + " ");
-//            System.out.print(entry.getName() + " ");//nickname别名
-//            System.out.print(entry.getUser() + " ");//jid->用户唯一标识
-//            System.out.print(entry.getGroups() + " ");
-//            System.out.print(entry.getType() + " ");
-//            System.out.println("------------------");
-        }
-    }
+	/**
+	 * 设置adapter或者更新adapter
+	 */
+	private void setAdapterOrNotify() {
+		// 判断adapter是否存在
+		if (mAdapter != null) {
+			// 刷新当前的adapter(cursoradapter)
+			mAdapter.getCursor().requery();
+			return;
+		}
 
-    /**
-     * 更新或者插入entry,优先更新.其次插入
-     *
-     * @param entry
-     */
-    private void updateOrInsertEntry(RosterEntry entry) {
-        ContentValues values = new ContentValues();
-        String account = entry.getUser();
-        values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, account);
-        account = account.substring(0, account.indexOf("@"));
-        String nickname = entry.getName();
-        if (nickname == null || "".equals(nickname)) {
-            nickname = account.substring(0, account.indexOf("@")) + "@" + LoginActivity.SERVER_NAME;
-        }
-        values.put(ContactOpenHelper.CONTACTTABLE.NICKNAME, nickname);
-        values.put(ContactOpenHelper.CONTACTTABLE.AVATOR, 0);
-        values.put(ContactOpenHelper.CONTACTTABLE.PINYIN, PinyinUtils.getPinyin(nickname));
+		ThreadUtils.runInThread(new Runnable() {
+			@Override
+			public void run() {
+				// 在子线程中查询对应的cursor数据
+				final Cursor c =
+						getActivity().getContentResolver().query(ContactProvider.CONTACT_URI, null, null, null, null);
 
-        //重点，首先考虑更新，如更新失败，再插入
-        int update = getActivity().getContentResolver().update(ContactProvider.CONTACT_URI, values,
-                ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[]{account});
-        if (update <= 0) {
-            //没有更新,没有对应记录
-            Uri insert = getActivity().getContentResolver().insert(ContactProvider.CONTACT_URI, values);
+				// 在主线程中创建cursorAdapter,然后设置adapter
+				ThreadUtils.runInUIThread(new Runnable() {
+					@Override
+					public void run() {
+						// CursorAdapter 创建不能在子线程
+						// getview-->newView()-->bindView()
+						mAdapter = new CursorAdapter(getActivity(), c) {
+							// convertView == null会调用该方法,决定根视图
+							@Override
+							public View newView(Context context, Cursor cursor, ViewGroup parent) {
+								// 决定根视图
+								View rootView = View.inflate(getActivity(), R.layout.item_contact, null);
+								return rootView;
+							}
 
-        }
-    }
+							// 展示具体的数据
+							@Override
+							public void bindView(View rootView, Context context, Cursor cursor) {
+								// 得到数据
+								String account =
+										cursor.getString(c.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
+								String nickName =
+										cursor.getString(c.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
+								// 展示数据
+								TextView tvNickName = (TextView) rootView.findViewById(R.id.nickname);
+								TextView tvAccount = (TextView) rootView.findViewById(R.id.account);
 
+								// 设置相应的文本
+								tvNickName.setText(nickName);
+								tvAccount.setText(account);
 
-    private void initView(View rootView) {
-        mListView = (ListView) rootView.findViewById(R.id.session_listview);
-    }
+							}
+						};
+						// listView设置adapter
+						mListView.setAdapter(mAdapter);
+					}
+				});
+			}
+		});
+	}
 
-    private void initData() {
-        ThreadUtils.runInThread(new Runnable() {
-            @Override
-            public void run() {
+	/*=============== 使用contentObserver时刻监听记录的改变 ===============*/
 
-                final Cursor cursor = getActivity().getContentResolver().query(ContactProvider.CONTACT_URI,
-                        null, null, null, null);
-               // 创建CursorAdapter(主线程),设置adapter
-                ThreadUtils.runInUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        CursorAdapter adapter = new CursorAdapter(getActivity(),cursor) {
-                            //convertView为空时调用
-                            @Override
-                            public View newView(Context context, Cursor cursor, ViewGroup parent) {
-                                //决定跟视图
-                                TextView textView = new TextView(getActivity());
-                                return textView;
-                            }
-                            //展示具体数据
-                            @Override
-                            public void bindView(View view, Context context, Cursor cursor) {
+	/**
+	 * 注册contentObserver
+	 */
+	public void registerContentObserver() {
+		// getActivity().getContentResolver().registerContentObserver(对哪一个uri进行监听,是否通知后代,指定具体接收结果的contentObserver);
+		getActivity().getContentResolver().registerContentObserver(ContactProvider.CONTACT_URI, true,
+				mMyContentObserver);
+	}
 
-                                //得到数据，展示数据
-                                String account = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
-                                TextView textView = (TextView) view;
-                                textView.setText(account);
+	/**
+	 * 反注册contentObserver
+	 */
+	public void unRegisterContentObserver() {
+		getActivity().getContentResolver().unregisterContentObserver(mMyContentObserver);
+	}
 
-                            }
-                        };
+	MyContentObserver	mMyContentObserver	= new MyContentObserver(new Handler());
 
-                        //listview 设置adapter
-                        mListView.setAdapter(adapter);
-                    }
-                });
+	class MyContentObserver extends ContentObserver {
+		public MyContentObserver(Handler handler) {
+			super(handler);
+		}
 
-                //设置roster监听器。监听花名册的改变
-                roster.addRosterListener(mMyRosterListner);
-            }
+		/**
+		 * 监听记录的改变,会对应走到onChange方法里来
+		 */
+		@Override
+		public void onChange(boolean selfChange, Uri uri) {
+			super.onChange(selfChange, uri);
+			// 需要更新ui
+			// 其实就是更新adapter
+			// adapter
+			// 如果adapter存在-->刷新adapter
+			// 如果adapter不存在-->创建adapter然后在设置adapter
+			setAdapterOrNotify();
+		}
+	}
 
-
-        });
-
-    }
-    //定义监听器，监听roster改变
-    MyRosterListner mMyRosterListner = new MyRosterListner();
-    class MyRosterListner implements RosterListener{
-
-        @Override
-        public void entriesAdded(Collection<String> addresses) {//添加联系人
-            System.out.println("---------entriesAdded--------------");
-            printAddress(addresses);
-        }
-
-        @Override
-        public void entriesUpdated(Collection<String> addresses) {//联系人更新
-            System.out.println("---------entriesUpdated--------------");
-            printAddress(addresses);
-        }
-
-        @Override
-        public void entriesDeleted(Collection<String> addresses) {//联系人删除
-            System.out.println("---------entriesDeleted--------------");
-            printAddress(addresses);
-        }
-
-        @Override
-        public void presenceChanged(Presence presence) {//状态改变
-
-        }
-    }
-
-    private void printAddress(Collection<String> addresses) {
-        for (String info :
-                addresses) {
-            System.out.println(info);
-        }
-    }
-
-    private void initListner() {
-
-    }
-
+	@Override
+	public void onDestroy() {
+		unRegisterContentObserver();
+		super.onDestroy();
+	}
 }
