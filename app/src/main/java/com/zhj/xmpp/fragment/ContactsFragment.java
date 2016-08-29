@@ -100,11 +100,7 @@ public class ContactsFragment extends Fragment {
 			public void run() {
 				// 在子线程中查询对应的cursor数据
 				final Cursor cursor =
-<<<<<<< Updated upstream
-						getActivity().getContentResolver().query(ContactProvider.CONTACT_URI, null, null, null, null);
-=======
 						getActivity().getContentResolver().query(ContactsProvider.CONTACT_URI, null, null, null, null);
->>>>>>> Stashed changes
 
 				// 在主线程中创建cursorAdapter,然后设置adapter
 				ThreadUtils.runInUIThread(new Runnable() {
@@ -126,11 +122,7 @@ public class ContactsFragment extends Fragment {
 							public void bindView(View rootView, Context context, Cursor cursor) {
 								// 得到数据
 								String account =
-<<<<<<< Updated upstream
-										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
-=======
 										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACCOUNT));
->>>>>>> Stashed changes
 								String nickName =
 										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
 								// 展示数据
