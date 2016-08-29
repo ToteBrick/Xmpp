@@ -90,6 +90,9 @@ public class LoginActivity extends Activity {
                             //登录成功
                             //保存相关变量
                             IMService.conn = conn;
+                            //启动相关服务
+                            Intent service = new Intent(LoginActivity.this,IMService.class) ;
+                            startService(service);
                             ThreadUtils.runInUIThread(new Runnable() {
                                 @Override
                                 public void run() {
