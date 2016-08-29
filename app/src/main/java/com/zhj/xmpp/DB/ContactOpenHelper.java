@@ -26,7 +26,7 @@ public class ContactOpenHelper extends SQLiteOpenHelper {
      * 把所有表字段定义为常量
      */
     public class CONTACTTABLE implements BaseColumns { //里面有_id,_count字段
-        public static final String ACOUNT = "acount";
+        public static final String ACCOUNT = "account";
         public static final String NICKNAME = "nickname";
         public static final String AVATOR = "avator";
         public static final String PINYIN = "pinyin";
@@ -39,7 +39,7 @@ public class ContactOpenHelper extends SQLiteOpenHelper {
                 T_CONTACT +
                 "(" +
                 CONTACTTABLE._ID + " integer primary key autoincrement , " +
-                CONTACTTABLE.ACOUNT + " text ," +
+                CONTACTTABLE.ACCOUNT + " text ," +
                 CONTACTTABLE.NICKNAME + " text," +
                 CONTACTTABLE.AVATOR + " text," +
                 CONTACTTABLE.PINYIN + " text" +

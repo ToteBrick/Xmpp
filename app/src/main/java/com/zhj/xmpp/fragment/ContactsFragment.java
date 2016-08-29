@@ -19,7 +19,7 @@ import android.widget.TextView;
 import com.zhj.xmpp.DB.ContactOpenHelper;
 import com.zhj.xmpp.R;
 import com.zhj.xmpp.activity.ChatActivity;
-import com.zhj.xmpp.provider.ContactProvider;
+import com.zhj.xmpp.provider.ContactsProvider;
 import com.zhj.xmpp.utils.ThreadUtils;
 
 /**
@@ -68,7 +68,7 @@ public class ContactsFragment extends Fragment {
 				// 游标移动到点击条目对应行
 				cursor.moveToPosition(position);
 				// 取值
-				String account = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
+				String account = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACCOUNT));
 				String nickname = cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
 
 				intent.putExtra(ChatActivity.CLICKACCOUNT, account);
@@ -100,7 +100,11 @@ public class ContactsFragment extends Fragment {
 			public void run() {
 				// 在子线程中查询对应的cursor数据
 				final Cursor cursor =
+<<<<<<< Updated upstream
 						getActivity().getContentResolver().query(ContactProvider.CONTACT_URI, null, null, null, null);
+=======
+						getActivity().getContentResolver().query(ContactsProvider.CONTACT_URI, null, null, null, null);
+>>>>>>> Stashed changes
 
 				// 在主线程中创建cursorAdapter,然后设置adapter
 				ThreadUtils.runInUIThread(new Runnable() {
@@ -122,7 +126,11 @@ public class ContactsFragment extends Fragment {
 							public void bindView(View rootView, Context context, Cursor cursor) {
 								// 得到数据
 								String account =
+<<<<<<< Updated upstream
 										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACOUNT));
+=======
+										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.ACCOUNT));
+>>>>>>> Stashed changes
 								String nickName =
 										cursor.getString(cursor.getColumnIndex(ContactOpenHelper.CONTACTTABLE.NICKNAME));
 								// 展示数据
@@ -150,7 +158,7 @@ public class ContactsFragment extends Fragment {
 	 */
 	public void registerContentObserver() {
 		// getActivity().getContentResolver().registerContentObserver(对哪一个uri进行监听,是否通知后代,指定具体接收结果的contentObserver);
-		getActivity().getContentResolver().registerContentObserver(ContactProvider.CONTACT_URI, true,
+		getActivity().getContentResolver().registerContentObserver(ContactsProvider.CONTACT_URI, true,
 				mMyContentObserver);
 	}
 

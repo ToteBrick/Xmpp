@@ -10,7 +10,7 @@ import android.widget.Toast;
 import com.zhj.xmpp.DB.ContactOpenHelper;
 import com.zhj.xmpp.DB.SmsOpenHelper;
 import com.zhj.xmpp.activity.LoginActivity;
-import com.zhj.xmpp.provider.ContactProvider;
+import com.zhj.xmpp.provider.ContactsProvider;
 import com.zhj.xmpp.provider.SmsProvider;
 import com.zhj.xmpp.utils.PinyinUtils;
 import com.zhj.xmpp.utils.ThreadUtils;
@@ -146,7 +146,7 @@ public class IMService extends Service {
 	private void updateOrInsertEntry(RosterEntry entry) {
 		ContentValues values = new ContentValues();
 		String account = entry.getUser();
-		values.put(ContactOpenHelper.CONTACTTABLE.ACOUNT, account);
+		values.put(ContactOpenHelper.CONTACTTABLE.ACCOUNT, account);
 
 		// account = account.substring(0,account.indexOf("@"))+"@"+ LoginActivity.SERVERNAME;
 
@@ -160,10 +160,10 @@ public class IMService extends Service {
 		// content://android.content.ContentProvider/contact
 		// 重点-->首先考虑更新,如果更新失败,在插入
 		int updateCount =
-				getContentResolver().update(ContactProvider.CONTACT_URI, values,
-						ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[] { account });
+				getContentResolver().update(ContactsProvider.CONTACT_URI, values,
+						ContactOpenHelper.CONTACTTABLE.ACCOUNT + "=?", new String[] { account });
 		if (updateCount <= 0) {// 没有更新到-->其实没有对应的记录
-			getContentResolver().insert(ContactProvider.CONTACT_URI, values);
+			getContentResolver().insert(ContactsProvider.CONTACT_URI, values);
 		}
 	}
 
@@ -205,8 +205,8 @@ public class IMService extends Service {
 			printCollection(collection);
 			for (String account : collection) {
 				// 删除数据库里面对应的记录
-				getContentResolver().delete(ContactProvider.CONTACT_URI,
-						ContactOpenHelper.CONTACTTABLE.ACOUNT + "=?", new String[] { account });
+				getContentResolver().delete(ContactsProvider.CONTACT_URI,
+						ContactOpenHelper.CONTACTTABLE.ACCOUNT + "=?", new String[] { account });
 			}
 		}
 
